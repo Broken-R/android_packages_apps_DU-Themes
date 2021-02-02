@@ -64,6 +64,19 @@ import com.android.internal.util.corvus.ThemesUtils;
 import com.android.internal.util.corvus.Utils;
 import com.corvus.support.colorpicker.ColorPickerPreference;
 
+import com.android.settings.R;
+import com.android.settings.dashboard.DashboardFragment;
+import com.android.settings.development.OverlayCategoryPreferenceController;
+import com.android.settings.display.CustomOverlayPreferenceController;
+import com.android.settings.search.BaseSearchIndexProvider;
+import com.android.settingslib.core.AbstractPreferenceController;
+import com.android.settingslib.core.lifecycle.Lifecycle;
+
+import com.corvus.settings.display.QsTileStylePreferenceController;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -107,7 +120,6 @@ public class Themes extends PreferenceFragment implements
     private Preference mWpPreview;
     private IOverlayManager mOverlayService;
     private ColorPickerPreference mThemeColor;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -632,6 +644,33 @@ public class Themes extends PreferenceFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.themes_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    protected String getLogTag() {
+        return TAG;
+    }
+
+    @Override
+    protected int getPreferenceScreenResId() {
+        return R.xml.themes;
+    }
+
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+    }
+
+    @Override
+    protected List<AbstractPreferenceController> createPreferenceControllers(Context context) {
+        return buildPreferenceControllers(context, getSettingsLifecycle(), this);
+    }
+
+    private static List<AbstractPreferenceController> buildPreferenceControllers(
+            Context context, Lifecycle lifecycle, Fragment fragment) {
+        final List<AbstractPreferenceController> controllers = new ArrayList<>();
+        controllers.add(new QsTileStylePreferenceController(context));
+        return controllers;
     }
 
     @Override
